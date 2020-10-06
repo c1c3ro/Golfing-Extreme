@@ -30,9 +30,11 @@ class TerrainGenerator(pygame.sprite.Sprite):
         self.x_div = x_div
         self.y_min_max = y_min_max
         self.points = [(0, self.app_height)] + self.generate() + [(self.app_width, self.app_height), (0, self.app_height)]
-        self.image = pygame.Surface([app_width, app_height])
-        self.image.fill(BROWN_SKY)
+        self.image = pygame.Surface([app_width, app_height], pygame.SRCALPHA, 32)
         self.rect = self.image.get_rect()
+        pygame.draw.polygon(self.image, BROWN_SAND, self.points)
+        self.mask = pygame.mask.from_surface(self.image, )
+        self.image.fill(BROWN_SKY)
 
     def generate(self):
         #A função generate vai receber um inteiro x_div
@@ -103,6 +105,5 @@ if __name__ == "__main__" :
                 running = False
 
         terrain_group.draw(display)
-        pygame.draw.polygon(display, BROWN_SAND, terrain.points)
 
         pygame.display.update()
