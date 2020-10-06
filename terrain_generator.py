@@ -12,7 +12,7 @@ import random
 import math
 from constants import *
 
-class TerrainGenerator:
+class TerrainGenerator(pygame.sprite.Sprite):
     #Terrain generator é uma classe que irá
     #gerar os terrenos do desert golfing de forma
     #procedural, utilizando a biblioteca random.
@@ -20,14 +20,21 @@ class TerrainGenerator:
     #especificadas pelo usuário e pegar pares aleatórios
     #de pontos (x, y) em cada uma das subdivisões
     #para gerar o terreno.
-    def __init__(self, app_width, app_height):
+    def __init__(self, app_width, app_height, x_div, y_min_max):
+        super().__init__()
         #recebendo os inteiros largura e a altura da tela do
         #jogo para que possa ser calculado as sub-divisões
         #para o terreno.
         self.app_width = app_width
         self.app_height = app_height
+        self.x_div = x_div
+        self.y_min_max = y_min_max
+        self.points = [(0, self.app_height)] + self.generate() + [(self.app_width, self.app_height), (0, self.app_height)]
+        self.image = pygame.Surface([app_width, app_height])
+        self.image.fill(BROWN_SKY)
+        self.rect = self.image.get_rect()
 
-    def generate(self, x_div, y_min_max):
+    def generate(self):
         #A função generate vai receber um inteiro x_div
         #contendo o número de divisões a serem feitas
         #horizontalmente e uma tupla y_min_max em que
@@ -41,9 +48,9 @@ class TerrainGenerator:
 
         #Definindo um tamanho relativo de
         #cada subdivisão
-        divs_size = self.app_width/x_div
+        divs_size = self.app_width/self.x_div
 
-        for div in range(x_div):
+        for div in range(self.x_div):
             #Definindo o ponto inicial e final de
             #cada subdivisão no X
             div_start = X[div]
@@ -72,22 +79,21 @@ class TerrainGenerator:
         Y = []
 
         for x in range(len(X)):
-            y = random.uniform(y_min_max[0], y_min_max[1])
+            y = random.uniform(self.y_min_max[0], self.y_min_max[1])
             Y.append(y)
 
         return [(math.floor(X[i]), math.floor(Y[i])) for i in range(len(X))]
             
 
 if __name__ == "__main__" :
-    size = window_width, window_height = 640, 400
+    size = window_width, window_height = 800, 400
 
-    terrain_generator = TerrainGenerator(window_width, window_height)
-    points = [(0, window_height)] + terrain_generator.generate(8, (200, 320)) + [(window_width, window_height), (0, window_height)]
-    #print(points)
+    terrain = TerrainGenerator(window_width, window_height, 8, (200, 320))
+    terrain_group = pygame.sprite.Group()
+    terrain_group.add(terrain)
 
     pygame.init()
     display = pygame.display.set_mode(size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-    display.fill(BROWN_SKY)
     running = True
 
     while(running):
@@ -96,9 +102,7 @@ if __name__ == "__main__" :
             if event.type == pygame.QUIT:
                 running = False
 
-        pygame.draw.polygon(display, BROWN_SAND, points)
+        terrain_group.draw(display)
+        pygame.draw.polygon(display, BROWN_SAND, terrain.points)
+
         pygame.display.update()
-
-        
-        
-
