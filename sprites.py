@@ -3,18 +3,38 @@ import random
 import math
 from constants import *
 
+vec = pygame.math.Vector2
+
 class Ball(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
 
-        self.image = pygame.image.load('golf-ball16.png')
+        self.image = pygame.image.load('golf-ball10.png')
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = 100
-        self.rect.y = -500
-        self.vel = 0
+        self.rect.y = 0
+        self.pos = vec(100, 0)
+        self.vel = vec(0, 0)
+        self.acc = vec(0, 0)
 
-    def update(self):
-        self.vel += GRAVIDADE_TERRA/40
-        self.rect.bottom += self.vel
+    def update(self, on_sand):
+        self.acc = vec(0, BALL_GRAV)
+        if on_sand:
+            self.acc = vec(0, 0)
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            self.acc.x = -BALL_ACC
+        if keys[pygame.K_RIGHT]:
+            self.acc.x = BALL_ACC
+
+        # apply friction
+        self.acc.x += self.vel.x * BALL_FRICTION
+        # equations of motion
+        self.vel += self.acc
+        if abs(self.vel.x) < 0.1:
+            self.vel.x = 0
+        self.pos += self.vel + 0.5 * self.acc
+        self.rect.midbottom = self.pos
+
