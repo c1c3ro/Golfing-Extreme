@@ -84,6 +84,25 @@ class TerrainGenerator(pygame.sprite.Sprite):
             y = random.uniform(self.y_min_max[0], self.y_min_max[1])
             Y.append(y)
 
+        #AQUI É ONDE EU CRIO O BURACO DA BOLA
+        x_hole = X[len(X) - HOLE_DIV - 1]
+        y_hole = Y[len(Y) - HOLE_DIV - 1]
+
+        y_hole -= 15
+
+        X.insert(len(X) - HOLE_DIV - 1, x_hole)
+        Y.insert(len(Y) - HOLE_DIV - 1, y_hole)
+
+        x_hole += 15
+
+        X.insert(len(X) - HOLE_DIV, x_hole)
+        Y.insert(len(Y) - HOLE_DIV, y_hole + 15) 
+
+        X.insert(len(X) - HOLE_DIV, x_hole)
+        Y.insert(len(Y) - HOLE_DIV, y_hole) 
+
+        X[len(X) - HOLE_DIV] += 20
+
         return [(math.floor(X[i]), math.floor(Y[i])) for i in range(len(X))]
             
 
