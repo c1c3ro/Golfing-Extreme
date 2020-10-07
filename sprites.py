@@ -13,6 +13,8 @@ class Ball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 100
         self.rect.y = -500
+        self.vel = 0
 
     def update(self):
-        self.rect.bottom += 5
+        self.vel += GRAVIDADE_TERRA/40
+        self.rect.bottom += self.vel
