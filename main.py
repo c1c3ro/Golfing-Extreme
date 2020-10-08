@@ -63,16 +63,15 @@ while running:
         plano_inclinado = CONSTANTE_PLANO * BALL_GRAV * angle_sin
         if ball.vel.x - plano_inclinado >= COEFICIENTE_ATRITO_ESTATICO:
             ball.vel.x -= plano_inclinado
+        if terrain.onHole(ball.rect.x):
+            # aqui é o evento para quando a bola entra no buraco
+            print('Yay! Dentro do buraco!')
         while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
             on_sand = True
             ball.rect.y -= 0.25
             ball.vel.y = 0
     else:
         on_sand = False
-
-    if terrain.onHole(ball.rect.x):
-        #aqui é o evento para quando a bola entra no buraco
-        print('Yay! Dentro do buraco!')
 
 
     #if hits and ball.rect.y > hits[1]:
