@@ -3,13 +3,11 @@ from sprites import *
 from constants import *
 from terrain_generator import *
 
-import numpy as np
-
 pygame.init()
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Golf Extreme")
-icon = pygame.image.load('golf-ball16.png')
+icon = pygame.image.load('golf-ball8.png')
 pygame.display.set_icon(icon)
 
 terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320))
@@ -21,34 +19,39 @@ ball_group = pygame.sprite.Group()
 ball_group.add(ball)
 
 running = True
+on_sand = False
+
 clock = pygame.time.Clock()
 
-moving = True
 while running:
-    clock.tick(100)
+    clock.tick(30)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                print("Espaço!")
-                ball.rect.move_ip(10, 5)
-                ball.f_r = np.add(ball.f_r, np.array([20, -20]))
-                moving = True
-                #ball_group.update()
+
+    screen.fill(BROWN_SKY)
+
+    if pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
+        print(terrain.getDiv(ball.rect.x))
+        while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
+            on_sand = True
+            ball.rect.y -= 1
+            ball.vel.y = 0
+    else:
+        on_sand = False
+
+    if terrain.onHole(ball.rect.x):
+        #aqui é o evento para quando a bola entra no buraco
+        print('Yay! Dentro do buraco!')
+
+
+    #if hits and ball.rect.y > hits[1]:
+    #    ball.rect.midbottom = hits
 
     terrain_group.draw(screen)
-    pygame.draw.polygon(screen, BROWN_SAND, terrain.points)
-
-    if not pygame.sprite.groupcollide(ball_group, terrain_group, False, False,
-                                      pygame.sprite.collide_mask):
-        moving = True
-    else:
-        moving = False
-
-    ball.update(moving)
-
     ball_group.draw(screen)
+
+    ball_group.update(on_sand)
     pygame.display.update()
 
 
