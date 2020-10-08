@@ -61,15 +61,16 @@ while running:
         ball.vel += bounce_vec
         #aqui é onde acontece a física do plano inclinado:
         plano_inclinado = CONSTANTE_PLANO * BALL_GRAV * angle_sin
-        if ball.vel.x - plano_inclinado >= COEFICIENTE_ATRITO_ESTATICO:
+        print(abs(ball.vel.x - plano_inclinado))
+        if abs(ball.vel.x - plano_inclinado) >= COEFICIENTE_ATRITO_ESTATICO:
             ball.vel.x -= plano_inclinado
         if terrain.onHole(ball.rect.x):
             # aqui é o evento para quando a bola entra no buraco
             print('Yay! Dentro do buraco!')
         while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
             on_sand = True
-            ball.rect.y -= 0.25
-            ball.vel.y = 0
+            ball.rect.y -= 0.025
+            #ball.vel.y = 0
     else:
         on_sand = False
 

@@ -90,6 +90,7 @@ class TerrainGenerator(pygame.sprite.Sprite):
         x_hole = X[len(X) - HOLE_DIV - 1]
         y_hole = Y[len(Y) - HOLE_DIV - 1]
 
+        x_hole -= 4
         y_hole -= 15
 
         X.insert(len(X) - HOLE_DIV - 1, x_hole)
@@ -100,7 +101,7 @@ class TerrainGenerator(pygame.sprite.Sprite):
         X.insert(len(X) - HOLE_DIV, x_hole)
         Y.insert(len(Y) - HOLE_DIV, y_hole + 15) 
 
-        X.insert(len(X) - HOLE_DIV, x_hole)
+        X.insert(len(X) - HOLE_DIV, x_hole + 4)
         Y.insert(len(Y) - HOLE_DIV, y_hole) 
 
         X[len(X) - HOLE_DIV] += 20
