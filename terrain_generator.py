@@ -126,7 +126,7 @@ class TerrainGenerator(pygame.sprite.Sprite):
         #retorna True se o valor X for dentro do buraco
         #e False se for fora
         div_index = self.getDiv(x)
-        if div_index + 1 == len(self.X) - HOLE_DIV - 1:
+        if div_index + 1 == len(self.X) - HOLE_DIV - 2:
             return True
         else:
             return False
