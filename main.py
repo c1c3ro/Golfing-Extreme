@@ -7,7 +7,7 @@ pygame.init()
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Golf Extreme")
-icon = pygame.image.load('golf-ball10.png')
+icon = pygame.image.load('golf-ball8.png')
 pygame.display.set_icon(icon)
 
 terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320))
@@ -30,16 +30,14 @@ while running:
 
     screen.fill(BROWN_SKY)
 
-    #hits = pygame.sprite.groupcollide(ball_group, terrain_group, False, False,
-    #                                  pygame.sprite.collide_mask)
-
-    hits = pygame.sprite.collide_mask(terrain, ball)
-    if hits:
-        on_sand = True
-        ball.rect.midbottom = hits
-        ball.vel.y = 0
+    if pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
+        while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
+            on_sand = True
+            ball.rect.y -= 1
+            ball.vel.y = 0
     else:
         on_sand = False
+
 
     #if hits and ball.rect.y > hits[1]:
     #    ball.rect.midbottom = hits

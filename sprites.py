@@ -10,7 +10,7 @@ class Ball(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
-        self.image = pygame.image.load('golf-ball10.png')
+        self.image = pygame.image.load('golf-ball8.png')
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = 100
@@ -23,11 +23,16 @@ class Ball(pygame.sprite.Sprite):
         self.acc = vec(0, BALL_GRAV)
         if on_sand:
             self.acc = vec(0, 0)
+        else:
+            if self.vel.y < -3:
+                self.vel.y = -3
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.acc.x = -BALL_ACC
         if keys[pygame.K_RIGHT]:
             self.acc.x = BALL_ACC
+        if keys[pygame.K_SPACE]:
+            self.vel.y -= 20
 
         # apply friction
         self.acc.x += self.vel.x * BALL_FRICTION
