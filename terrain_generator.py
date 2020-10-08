@@ -35,6 +35,8 @@ class TerrainGenerator(pygame.sprite.Sprite):
         self.image = self.image.convert_alpha()
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
+        #self.X = []
+        #self.Y = []
 
     def generate(self):
         #A função generate vai receber um inteiro x_div
@@ -103,9 +105,34 @@ class TerrainGenerator(pygame.sprite.Sprite):
 
         X[len(X) - HOLE_DIV] += 20
 
-        return [(math.floor(X[i]), math.floor(Y[i])) for i in range(len(X))]
-            
+        self.X = X
+        self.Y = Y
 
+        return [(math.floor(X[i]), math.floor(Y[i])) for i in range(len(X))]
+
+    def getDiv(self, x):
+        #retorna a divisão a que a coordenada x pertence
+        if len(self.X) <= 0:
+            raise Exception("As divisões não estão definidas. Rode o método generate(), se o erro persistir deve haver algo errado.")
+        else:
+            x_curr = self.X[0]
+            for i in range(len(self.X) - 1):
+                if x_curr <= x < self.X[i+1]:
+                    return i
+                x_curr = self.X[i+1]
+            return -1
+
+    def onHole(self, x):
+        #retorna True se o valor X for dentro do buraco
+        #e False se for fora
+        div_index = self.getDiv(x)
+        if len(self.X) - HOLE_DIV - 2 <= div_index + 1 <= len(self.X) - HOLE_DIV:
+            return True
+        else:
+            return False
+        
+            
+'''
 if __name__ == "__main__" :
     size = window_width, window_height = 800, 400
 
@@ -126,3 +153,4 @@ if __name__ == "__main__" :
         terrain_group.draw(display)
 
         pygame.display.update()
+'''

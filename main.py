@@ -22,6 +22,7 @@ running = True
 on_sand = False
 
 clock = pygame.time.Clock()
+
 while running:
     clock.tick(30)
     for event in pygame.event.get():
@@ -31,12 +32,17 @@ while running:
     screen.fill(BROWN_SKY)
 
     if pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
+        print(terrain.getDiv(ball.rect.x))
         while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
             on_sand = True
             ball.rect.y -= 1
             ball.vel.y = 0
     else:
         on_sand = False
+
+    if terrain.onHole(ball.rect.x):
+        #aqui é o evento para quando a bola entra no buraco
+        print('Yay! Dentro do buraco!')
 
 
     #if hits and ball.rect.y > hits[1]:
