@@ -60,10 +60,9 @@ while running:
         ball.vel = vec(0, 0)
         ball.vel += bounce_vec
         #aqui é onde acontece a física do plano inclinado:
-        plano_inclinado = CONSTANTE_PLANO * BALL_GRAV * angle_sin
-        print(abs(ball.vel.x - plano_inclinado))
-        if abs(ball.vel.x - plano_inclinado) >= COEFICIENTE_ATRITO_ESTATICO:
-            ball.vel.x -= plano_inclinado
+        plano_inclinado = CONSTANTE_PLANO * vec(0, BALL_GRAV) * angle_sin
+        vec_mag = (ball.vel + plano_inclinado).magnitude()
+        print(vec_mag)
         if terrain.onHole(ball.rect.x):
             # aqui é o evento para quando a bola entra no buraco
             print('Yay! Dentro do buraco!')
@@ -71,6 +70,12 @@ while running:
             on_sand = True
             ball.rect.y -= 0.025
             #ball.vel.y = 0
+            '''if vec_mag >= COEFICIENTE_ATRITO_ESTATICO:
+                ball.vel -= plano_inclinado
+                ball.vel.x += ball.vel.x * BALL_FRICTION
+            else:
+                ball.vel.x = 0
+                ball.vel.y = 0'''
     else:
         on_sand = False
 

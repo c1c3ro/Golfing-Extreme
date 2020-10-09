@@ -35,7 +35,7 @@ class Ball(pygame.sprite.Sprite):
             self.vel.y -= 20
 
         # apply friction
-        #self.acc.x += self.vel.x * BALL_FRICTION
+        self.vel.x += self.vel.x * BALL_FRICTION
         # equations of motion
         self.vel += self.acc
         if abs(self.vel.x) < 0.1:
