@@ -69,7 +69,7 @@ while running:
         while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
             on_sand = True
             ball.rect.y -= 0.25
-            ball.vel.y = 0
+            #ball.vel.y = 0
     else:
         on_sand = False
 
