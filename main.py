@@ -24,6 +24,9 @@ ball_group.add(ball)
 running = True
 on_sand = False
 
+mouse_old = False
+mouse_curr = False
+
 clock = pygame.time.Clock()
 
 while running:
@@ -69,6 +72,24 @@ while running:
         while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
             on_sand = True
             ball.rect.y -= 0.25
+            if ball.vel.magnitude() <= 0.4:
+                #jogar a bola novamente
+                mouse_pos = pygame.mouse.get_pos()
+                dot_pos = (mouse_pos - ball.pos)/5
+                #desenhando a força
+                for i in range(1, 6):
+                    pygame.draw.circle(screen, WHITE, (math.floor(i*dot_pos.x + ball.pos.x), math.floor(i*dot_pos.y + ball.pos.y)), i*2, 1)
+
+                mouse_curr = pygame.mouse.get_pressed()[0]
+
+                if(mouse_curr == False and mouse_old == True):
+                    mouse_old = mouse_curr
+                    #agora joga a bola
+                    traction = vec(K_FORCE * (mouse_pos - ball.pos).x, K_FORCE * (mouse_pos - ball.pos).y)
+                    ball.vel += traction
+                    on_sand = False
+                
+                    
             #ball.vel.y = 0
     else:
         on_sand = False
@@ -80,8 +101,11 @@ while running:
     terrain_group.draw(screen)
     ball_group.draw(screen)
 
+    mouse_old = mouse_curr
+
     ball_group.update(on_sand)
     pygame.display.update()
+
 
 
 pygame.quit()
