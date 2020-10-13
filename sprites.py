@@ -13,9 +13,9 @@ class Ball(pygame.sprite.Sprite):
         self.image = pygame.image.load('golf-ball8.png')
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.rect.x = 100
-        self.rect.y = 0
-        self.pos = vec(100, 0)
+        self.rect.x = 50
+        self.rect.y = 200
+        self.pos = vec(50, 200)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 

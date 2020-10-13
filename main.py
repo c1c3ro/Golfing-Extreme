@@ -94,9 +94,10 @@ while running:
     else:
         on_sand = False
 
-
-    #if hits and ball.rect.y > hits[1]:
-    #    ball.rect.midbottom = hits
+    if ball.rect.x < 0 or ball.rect.x > WIDTH:
+        ball_group.remove(ball)
+        ball = Ball()
+        ball_group.add(ball)
 
     terrain_group.draw(screen)
     ball_group.draw(screen)
