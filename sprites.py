@@ -7,7 +7,7 @@ vec = pygame.math.Vector2
 
 class Ball(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, mode):
         super().__init__()
 
         self.image = pygame.image.load('golf-ball8.png')
@@ -18,9 +18,15 @@ class Ball(pygame.sprite.Sprite):
         self.pos = vec(50, 200)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
+        if mode == EARTH_MODE:
+            self.ball_grav = EARTH_GRAV
+        elif mode == MARS_MODE:
+            self.ball_grav = MARS_GRAV
+        elif mode == MOON_MODE:
+            self.ball_grav = MOON_GRAV
 
     def update(self, on_sand):
-        self.acc = vec(0, BALL_GRAV)
+        self.acc = vec(0, self.ball_grav)
         if on_sand:
             self.acc = vec(0, 0)
         else:

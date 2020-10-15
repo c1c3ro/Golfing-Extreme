@@ -20,7 +20,7 @@ class TerrainGenerator(pygame.sprite.Sprite):
     #especificadas pelo usuário e pegar pares aleatórios
     #de pontos (x, y) em cada uma das subdivisões
     #para gerar o terreno.
-    def __init__(self, app_width, app_height, x_div, y_min_max):
+    def __init__(self, app_width, app_height, x_div, y_min_max, mode):
         super().__init__()
         #recebendo os inteiros largura e a altura da tela do
         #jogo para que possa ser calculado as sub-divisões
@@ -31,7 +31,12 @@ class TerrainGenerator(pygame.sprite.Sprite):
         self.y_min_max = y_min_max
         self.points = [(0, self.app_height)] + self.generate() + [(self.app_width, self.app_height), (0, self.app_height)]
         self.image = pygame.Surface([app_width, app_height], pygame.SRCALPHA, 32)
-        pygame.draw.polygon(self.image, BROWN_SAND, self.points)
+        if mode == EARTH_MODE:
+            pygame.draw.polygon(self.image, BROWN_SAND, self.points)
+        elif mode == MARS_MODE:
+            pygame.draw.polygon(self.image, RED_MARS, self.points)
+        elif mode == MOON_MODE:
+            pygame.draw.polygon(self.image, MOON_GREY, self.points)
         self.image = self.image.convert_alpha()
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
