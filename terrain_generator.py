@@ -20,7 +20,7 @@ class TerrainGenerator(pygame.sprite.Sprite):
     #especificadas pelo usuário e pegar pares aleatórios
     #de pontos (x, y) em cada uma das subdivisões
     #para gerar o terreno.
-    def __init__(self, app_width, app_height, x_div, y_min_max):
+    def __init__(self, app_width, app_height, x_div, y_min_max, mode):
         super().__init__()
         #recebendo os inteiros largura e a altura da tela do
         #jogo para que possa ser calculado as sub-divisões
@@ -31,7 +31,12 @@ class TerrainGenerator(pygame.sprite.Sprite):
         self.y_min_max = y_min_max
         self.points = [(0, self.app_height)] + self.generate() + [(self.app_width, self.app_height), (0, self.app_height)]
         self.image = pygame.Surface([app_width, app_height], pygame.SRCALPHA, 32)
-        pygame.draw.polygon(self.image, BROWN_SAND, self.points)
+        if mode == EARTH_MODE:
+            pygame.draw.polygon(self.image, BROWN_SAND, self.points)
+        elif mode == MARS_MODE:
+            pygame.draw.polygon(self.image, RED_MARS, self.points)
+        elif mode == MOON_MODE:
+            pygame.draw.polygon(self.image, MOON_GREY, self.points)
         self.image = self.image.convert_alpha()
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
@@ -122,11 +127,24 @@ class TerrainGenerator(pygame.sprite.Sprite):
                 x_curr = self.X[i+1]
             return -1
 
-    def onHole(self, x):
+    def getY(self, y):
+        if len(self.Y) <= 0:
+            raise Exception("As divisões no Y não estão definidas. Rode o método generate(), se o erro persistir deve haver algo errado.")
+        else:
+            y_curr = self.Y[0]
+            for i in range(len(self.Y) - 1):
+                if y_curr <= y < self.Y[i+1]:
+                    return i
+                y_curr = self.X[i+1]
+            return -1
+        pass
+
+    def onHole(self, x, y):
         #retorna True se o valor X for dentro do buraco
         #e False se for fora
         div_index = self.getDiv(x)
-        if div_index + 1 == len(self.X) - HOLE_DIV - 2:
+        y_index = self.getY(y)
+        if (div_index + 1 == len(self.X) - HOLE_DIV - 2) and (self.Y[div_index - 1] <= y <= self.Y[div_index]):
             return True
         else:
             return False
