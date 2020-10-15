@@ -28,6 +28,7 @@ ball_group.add(ball)
 
 running = True
 on_sand = False
+on_hole = 0
 
 mouse_old = False
 mouse_curr = False
@@ -79,13 +80,15 @@ while running:
         if terrain.onHole(ball.rect.x, ball.rect.y):
             # aqui é o evento para quando a bola entra no buraco
             print('Yay! Dentro do buraco!')
+            on_hole += 1
+
         '''else:
             #apenas para propositos de debug
             x_div = terrain.getDiv(ball.rect.x)
             print('X_div: {}, Y[div]: {}, Y[div + 1]: {}'.format(x_div, terrain.Y[x_div-1], terrain.Y[x_div]))'''
         while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
             on_sand = True
-            ball.rect.y -= 0.25
+            ball.rect.y -= 0.5
             if ball.vel.magnitude() <= 0.4:
                 #jogar a bola novamente
                 mouse_pos = pygame.mouse.get_pos()
@@ -109,10 +112,16 @@ while running:
         on_sand = False
 
     if ball.rect.x < 0 or ball.rect.x > WIDTH:
-        ball_group.remove(ball)
-        ball = Ball(mode)
-        ball_group.add(ball)
+        ball.pos = (50, 200)
+        ball.vel = vec(0, 0)
+        ball.acc = vec(0, 0)
 
+    if on_hole > 100:
+        ball.pos = (50, 200)
+        terrain_group.remove(terrain)
+        terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
+        terrain_group.add(terrain)
+        on_hole = 0
     terrain_group.draw(screen)
     ball_group.draw(screen)
 

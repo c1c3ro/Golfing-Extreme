@@ -34,10 +34,10 @@ class Ball(pygame.sprite.Sprite):
                 self.vel.y = -4
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            #self.acc.x = -BALL_ACC
+            self.acc.x = -BALL_ACC
             pass
         if keys[pygame.K_RIGHT]:
-            #self.acc.x = BALL_ACC
+            self.acc.x = BALL_ACC
             pass
         if keys[pygame.K_SPACE]:
             self.vel.y -= 20
