@@ -122,11 +122,24 @@ class TerrainGenerator(pygame.sprite.Sprite):
                 x_curr = self.X[i+1]
             return -1
 
-    def onHole(self, x):
+    def getY(self, y):
+        if len(self.Y) <= 0:
+            raise Exception("As divisões no Y não estão definidas. Rode o método generate(), se o erro persistir deve haver algo errado.")
+        else:
+            y_curr = self.Y[0]
+            for i in range(len(self.Y) - 1):
+                if y_curr <= y < self.Y[i+1]:
+                    return i
+                y_curr = self.X[i+1]
+            return -1
+        pass
+
+    def onHole(self, x, y):
         #retorna True se o valor X for dentro do buraco
         #e False se for fora
         div_index = self.getDiv(x)
-        if div_index + 1 == len(self.X) - HOLE_DIV - 2:
+        y_index = self.getY(y)
+        if (div_index + 1 == len(self.X) - HOLE_DIV - 2) and (self.Y[div_index - 1] <= y <= self.Y[div_index]):
             return True
         else:
             return False
