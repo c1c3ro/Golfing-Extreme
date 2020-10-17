@@ -88,8 +88,13 @@ class TerrainGenerator(pygame.sprite.Sprite):
         Y = []
 
         for x in range(len(X)):
-            y = random.uniform(self.y_min_max[0], self.y_min_max[1])
-            Y.append(y)
+            if x != 2:
+                y = random.uniform(self.y_min_max[0], self.y_min_max[1])
+                Y.append(y)
+            # FAZENDO A SEGUNDA E TERCEIRA COORD Y IGUAIS PARA O TERRENO FICAR PLANO PARA A BOLA
+            else:
+                Y.append(Y[1])
+
 
         #AQUI É ONDE EU CRIO O BURACO DA BOLA
         x_hole = X[len(X) - HOLE_DIV - 1]

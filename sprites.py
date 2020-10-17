@@ -7,15 +7,15 @@ vec = pygame.math.Vector2
 
 class Ball(pygame.sprite.Sprite):
 
-    def __init__(self, mode):
+    def __init__(self, mode, initial_x):
         super().__init__()
 
         self.image = pygame.image.load('golf-ball8.png')
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.rect.x = 50
+        self.rect.x = initial_x
         self.rect.y = 200
-        self.pos = vec(50, 200)
+        self.pos = vec(initial_x, 200)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         if mode == EARTH_MODE:

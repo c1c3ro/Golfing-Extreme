@@ -22,7 +22,7 @@ terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
 terrain_group = pygame.sprite.Group()
 terrain_group.add(terrain)
 
-ball = Ball(mode)
+ball = Ball(mode, terrain.X[1] + 10)
 ball_group = pygame.sprite.Group()
 ball_group.add(ball)
 
@@ -36,7 +36,7 @@ mouse_curr = False
 clock = pygame.time.Clock()
 
 while running:
-    clock.tick(30)
+    clock.tick(25)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -112,12 +112,12 @@ while running:
         on_sand = False
 
     if ball.rect.x < 0 or ball.rect.x > WIDTH:
-        ball.pos = (50, 200)
+        ball.pos = (terrain.X[1] + 10, 200)
         ball.vel = vec(0, 0)
         ball.acc = vec(0, 0)
 
     if on_hole > 100:
-        ball.pos = (50, 200)
+        ball.pos = (terrain.X[1] + 10, 200)
         terrain_group.remove(terrain)
         terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
         terrain_group.add(terrain)
