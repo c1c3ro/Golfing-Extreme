@@ -2,6 +2,7 @@ import pygame
 from sprites import *
 from constants import *
 from terrain_generator import *
+from menu import *
 import math
 import constants
 
@@ -26,6 +27,8 @@ ball = Ball(mode, terrain.X[1] + 10)
 ball_group = pygame.sprite.Group()
 ball_group.add(ball)
 
+menu = Menu()
+
 running = True
 on_sand = False
 on_hole = 0
@@ -34,6 +37,8 @@ mouse_old = False
 mouse_curr = False
 
 clock = pygame.time.Clock()
+
+running = menu.initial_menu(screen)
 
 while running:
     clock.tick(25)
@@ -74,9 +79,9 @@ while running:
         ball.vel = vec(0, 0)
         ball.vel += bounce_vec
         #aqui é onde acontece a física do plano inclinado:
-        #plano_inclinado = CONSTANTE_PLANO * ball_grav * angle_sin
-        #if ball.vel.x - plano_inclinado >= COEFICIENTE_ATRITO_ESTATICO:
-        #    ball.vel.x -= plano_inclinado
+        plano_inclinado = CONSTANTE_PLANO * ball_grav * angle_sin
+        if ball.vel.x - plano_inclinado >= COEFICIENTE_ATRITO_ESTATICO:
+            ball.vel.x -= plano_inclinado
         if terrain.onHole(ball.rect.x, ball.rect.y):
             # aqui é o evento para quando a bola entra no buraco
             print('Yay! Dentro do buraco!')
