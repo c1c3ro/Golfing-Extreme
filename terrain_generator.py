@@ -79,7 +79,6 @@ class TerrainGenerator(pygame.sprite.Sprite):
         #da tela, app_width
         X.append(self.app_width)
 
-        #print(X)
 
         #No Y vai funcionar de uma forma parecida:
         #eu vou gerar um número aleatório em o y_min
@@ -117,6 +116,12 @@ class TerrainGenerator(pygame.sprite.Sprite):
 
         self.X = X
         self.Y = Y
+
+        '''
+        for x in range(len(X)):
+            print(X[x], end='   ')
+            print(Y[x])
+        '''
 
         return [(math.floor(X[i]), math.floor(Y[i])) for i in range(len(X))]
 

@@ -19,6 +19,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Golf Extreme")
 icon = pygame.image.load('golf-ball8.png')
 pygame.display.set_icon(icon)
+flag = pygame.image.load('flag.png')
+score = 1
+score_font = pygame.font.Font("freesansbold.ttf", 10)
 
 # SONS
 background_song = pygame.mixer.Sound('sky_loop.wav')
@@ -138,8 +141,15 @@ while running:
         terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
         terrain_group.add(terrain)
         on_hole = 0
+        score += 1
+
     terrain_group.draw(screen)
     ball_group.draw(screen)
+
+    # DESENHANDO A BANDEIRA
+    screen.blit(flag, (terrain.X[-3], terrain.Y[-3] - 20))
+    screen.blit(score_font.render(str(score), True, WHITE), (terrain.X[-3] + 5, terrain.Y[-3] - 18))
+
 
     mouse_old = mouse_curr
 
