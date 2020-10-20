@@ -10,9 +10,15 @@ class Ball(pygame.sprite.Sprite):
     def __init__(self, mode, initial_x):
         super().__init__()
 
-        self.image = pygame.image.load('golf-ball8.png')
-        self.mask = pygame.mask.from_surface(self.image)
+        #self.mask = pygame.mask.from_surface(self.image)
+        #self.image = pygame.Surface([WIDTH, HEIGHT], pygame.SRCALPHA, 32)
+        #self.image = pygame.Surface([WIDTH, HEIGHT])
+        #self.image.fill(WHITE)
+        #self.image.set_colorkey(WHITE)
+        #pygame.draw.circle(self.image, WHITE, (0, 0), 5)
+        self.image = pygame.image.load('golf-ball8.png').convert_alpha()
         self.rect = self.image.get_rect()
+        #self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = initial_x
         self.rect.y = 200
         self.pos = vec(initial_x, 200)
@@ -46,8 +52,8 @@ class Ball(pygame.sprite.Sprite):
         self.acc.x += self.vel.x * BALL_FRICTION
         # equations of motion
         self.vel += self.acc
-        if abs(self.vel.x) < 0.1:
-            self.vel.x = 0
+        if abs(self.vel.x) < 0.1 and abs(self.vel.y) < 0.1:
+            self.vel = vec(0, 0)
         self.pos += self.vel + 0.5 * self.acc
         self.rect.midbottom = self.pos
 

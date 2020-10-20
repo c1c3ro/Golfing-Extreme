@@ -83,7 +83,7 @@ while running:
         angle_sin = math.sin(math.radians(angle + 180))
         angle_cos = math.cos(math.radians(angle + 180))
         #print(math.degrees(angle))
-        #print("Angulo: {}\nSeno: {}\nCoseno: {}".format(angle, math.sin(math.radians(angle)), math.cos(math.radians(angle))))
+        print("Angulo: {}\nSeno: {}\nCoseno: {}".format(angle, math.sin(math.radians(angle)), math.cos(math.radians(angle))))
         #agora eu vou inverter o vetor de velocidade da bola com relação à normal do plano
         #esse vetor vai ser o quique da bola
         bounce_vec = ball.vel.reflect(normal_vec)
@@ -92,9 +92,9 @@ while running:
         ball.vel = vec(0, 0)
         ball.vel += bounce_vec
         #aqui é onde acontece a física do plano inclinado:
-        plano_inclinado = CONSTANTE_PLANO * ball_grav * angle_sin
-        if ball.vel.x - plano_inclinado >= COEFICIENTE_ATRITO_ESTATICO:
-            ball.vel.x -= plano_inclinado
+        #plano_inclinado = CONSTANTE_PLANO * ball_grav * angle_sin
+        #if ball.vel.x - plano_inclinado >= COEFICIENTE_ATRITO_ESTATICO:
+        #    ball.vel.x -= plano_inclinado
         if terrain.onHole(ball.rect.x, ball.rect.y):
             # aqui é o evento para quando a bola entra no buraco
             print('Yay! Dentro do buraco!')
@@ -124,8 +124,8 @@ while running:
                     ball.vel += traction
                     on_sand = False
                     golf_hit.play()
-                
-                    
+
+
             #ball.vel.y = 0
     else:
         on_sand = False

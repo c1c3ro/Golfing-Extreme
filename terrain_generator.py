@@ -30,7 +30,9 @@ class TerrainGenerator(pygame.sprite.Sprite):
         self.x_div = x_div
         self.y_min_max = y_min_max
         self.points = [(0, self.app_height)] + self.generate() + [(self.app_width, self.app_height), (0, self.app_height)]
-        self.image = pygame.Surface([app_width, app_height], pygame.SRCALPHA, 32)
+        self.image = pygame.Surface([self.app_width, self.app_height])
+        self.image.fill(WHITE)
+        self.image.set_colorkey(WHITE)
         if mode == EARTH_MODE:
             pygame.draw.polygon(self.image, BROWN_SAND, self.points)
         elif mode == MARS_MODE:
