@@ -14,15 +14,22 @@ mode = EARTH_MODE
 
 ball_grav = BALL_GRAV
 
+# JOGO
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Golf Extreme")
 icon = pygame.image.load('golf-ball8.png')
 pygame.display.set_icon(icon)
 
+# SONS
+background_song = pygame.mixer.Sound('sky_loop.wav')
+golf_hit = pygame.mixer.Sound('golf_ball.wav')
+
+# TERRENO
 terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
 terrain_group = pygame.sprite.Group()
 terrain_group.add(terrain)
 
+# BOLA
 ball = Ball(mode, terrain.X[1] + 10)
 ball_group = pygame.sprite.Group()
 ball_group.add(ball)
@@ -39,6 +46,9 @@ mouse_curr = False
 clock = pygame.time.Clock()
 
 running = menu.initial_menu(screen)
+
+background_song.play(-1)
+background_song.set_volume(0.4)
 
 while running:
     clock.tick(25)
@@ -110,6 +120,7 @@ while running:
                     traction = vec(K_FORCE * (mouse_pos - ball.pos).x, K_FORCE * (mouse_pos - ball.pos).y)
                     ball.vel += traction
                     on_sand = False
+                    golf_hit.play()
                 
                     
             #ball.vel.y = 0
