@@ -9,6 +9,10 @@ Projeto De Python e PyGame feito por mim e os alunos Cícero Samuel e Thiago Car
 
 ### Requisitos
 
+Pygame:
+```python
+pip install pygame
+```
 Numpy:
 
 ```python
