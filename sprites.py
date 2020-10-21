@@ -36,8 +36,8 @@ class Ball(pygame.sprite.Sprite):
         if on_sand:
             self.acc = vec(0, 0)
         else:
-            if self.vel.y < -4:
-                self.vel.y = -4
+            if self.vel.y < -5:
+                self.vel.y = -5
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             #self.acc.x = -BALL_ACC
