@@ -104,10 +104,21 @@ while running:
             #apenas para propositos de debug
             x_div = terrain.getDiv(ball.rect.x)
             print('X_div: {}, Y[div]: {}, Y[div + 1]: {}'.format(x_div, terrain.Y[x_div-1], terrain.Y[x_div]))'''
+
+        
+        '''vel_mag = ball.vel.magnitude()
+        print(vel_mag)
+        if vel_mag < 1.5:
+            ball.vel.x = 0
+            ball.vel.x = 0'''
         while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
             on_sand = True
             ball.rect.y -= 0.5
-            if ball.vel.magnitude() <= 0.4:
+            #verificando se a velocidade da bola está pequena demais:
+            print(ball.vel, ball.vel.magnitude())
+            if ball.vel.magnitude() <= 1.5:
+                ball.vel.x = 0
+                ball.vel.y = 0
                 #jogar a bola novamente
                 mouse_pos = pygame.mouse.get_pos()
                 dot_pos = (mouse_pos - ball.pos)/5
