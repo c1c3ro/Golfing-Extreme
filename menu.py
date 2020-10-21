@@ -15,7 +15,6 @@ class Menu:
         (x, y) = (0, 0)
         clock = pygame.time.Clock()
 
-        anime = pygame.image.load('fx.png')
         ball = pygame.image.load('golf-ball8.png')
         startmenu = pygame.image.load("Initialmenu.jpg")
 
