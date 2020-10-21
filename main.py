@@ -155,6 +155,11 @@ while running:
         score += 1
 
     terrain_group.draw(screen)
+    
+    if menu.firt:
+        menu.firt = False
+        running = menu.help(screen)
+    
     ball_group.draw(screen)
 
     # DESENHANDO A BANDEIRA
