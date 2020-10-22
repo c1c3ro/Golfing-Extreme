@@ -1,5 +1,6 @@
 import pygame
 from constants import *
+from os import path
 import math
 
 class Menu:
@@ -19,17 +20,17 @@ class Menu:
         space = []
         fx = []
 
-        fx.append(pygame.image.load('fx_01.png'))
-        fx.append(pygame.image.load('fx_02.png'))
-        fx.append(pygame.image.load('fx_03.png'))
-        fx.append(pygame.image.load('fx_04.png'))
+        fx.append(pygame.image.load(path.join('img', 'fx_01.png')))
+        fx.append(pygame.image.load(path.join('img', 'fx_02.png')))
+        fx.append(pygame.image.load(path.join('img', 'fx_03.png')))
+        fx.append(pygame.image.load(path.join('img', 'fx_04.png')))
 
-        space.append(pygame.image.load('space1.png'))
-        space.append(pygame.image.load('space2.png'))
-        space.append(pygame.image.load('space3.png'))
-        space.append(pygame.image.load('space4.png'))
-        space.append(pygame.image.load('space5.png'))
-        space.append(pygame.image.load('space6.png'))
+        space.append(pygame.image.load(path.join('img', 'space1.png')))
+        space.append(pygame.image.load(path.join('img', 'space2.png')))
+        space.append(pygame.image.load(path.join('img', 'space3.png')))
+        space.append(pygame.image.load(path.join('img', 'space4.png')))
+        space.append(pygame.image.load(path.join('img', 'space5.png')))
+        space.append(pygame.image.load(path.join('img', 'space6.png')))
 
         while True:
 
@@ -76,8 +77,8 @@ class Menu:
         (x, y) = (0, 0)
         clock = pygame.time.Clock()
 
-        ball = pygame.image.load('golf-ball8.png')
-        startmenu = pygame.image.load("Initialmenu.jpg")
+        ball = pygame.image.load(path.join('img', 'golf-ball8.png'))
+        startmenu = pygame.image.load(path.join('img', "Initialmenu.jpg"))
 
         screen.blit(startmenu, (0, 0))
 
@@ -117,7 +118,7 @@ class Menu:
             text2 = "dar a tacada."
             text3 = "Clique para continuar..."
 
-            window = pygame.image.load("window.png")
+            window = pygame.image.load(path.join('img', "window.png"))
 
             screen.blit(window, (20, 20))
 

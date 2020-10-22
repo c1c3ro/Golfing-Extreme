@@ -1,5 +1,3 @@
-import numpy as np
-
 #CORES
 WHITE = [255, 255, 255]
 RED_MARS = [204,30,44]
