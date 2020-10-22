@@ -59,6 +59,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                ball.pos = (terrain.X[1] + 10, 200)
+                terrain_group.remove(terrain)
+                terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
+                terrain_group.add(terrain)
+                on_hole = 0
+                score += 1
 
     if mode == EARTH_MODE:
         screen.fill(BROWN_SKY)
