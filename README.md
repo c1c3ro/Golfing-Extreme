@@ -13,8 +13,3 @@ Pygame:
 ```python
 pip install pygame
 ```
-Numpy:
-
-```python
-python -m pip install numpy
-```

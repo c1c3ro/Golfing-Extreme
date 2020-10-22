@@ -1,6 +1,7 @@
 import pygame
 from sprites import *
 from constants import *
+from os import path
 from terrain_generator import *
 from menu import *
 import math
@@ -17,9 +18,9 @@ ball_grav = BALL_GRAV
 # JOGO
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Golf Extreme")
-icon = pygame.image.load('golf-ball8.png')
+icon = pygame.image.load(path.join('img', 'golf-ball8.png'))
 pygame.display.set_icon(icon)
-flag = pygame.image.load('flag.png')
+flag = pygame.image.load(path.join('img', 'flag.png'))
 score = 1
 score_font = pygame.font.Font("freesansbold.ttf", 10)
 
@@ -58,6 +59,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                ball.pos = (terrain.X[1] + 10, 200)
+                terrain_group.remove(terrain)
+                terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
+                terrain_group.add(terrain)
+                on_hole = 0
+                score += 1
 
     if mode == EARTH_MODE:
         screen.fill(BROWN_SKY)
@@ -83,7 +92,7 @@ while running:
         angle_sin = math.sin(math.radians(angle + 180))
         angle_cos = math.cos(math.radians(angle + 180))
         #print(math.degrees(angle))
-        print("Angulo: {}\nSeno: {}\nCoseno: {}".format(angle, math.sin(math.radians(angle)), math.cos(math.radians(angle))))
+        #print("Angulo: {}\nSeno: {}\nCoseno: {}".format(angle, math.sin(math.radians(angle)), math.cos(math.radians(angle))))
         #agora eu vou inverter o vetor de velocidade da bola com relação à normal do plano
         #esse vetor vai ser o quique da bola
         bounce_vec = ball.vel.reflect(normal_vec)
@@ -115,7 +124,7 @@ while running:
             on_sand = True
             ball.rect.y -= 0.5
             #verificando se a velocidade da bola está pequena demais:
-            print(ball.vel, ball.vel.magnitude())
+            #print(ball.vel, ball.vel.magnitude())
             if ball.vel.magnitude() <= 1.5:
                 ball.vel.x = 0
                 ball.vel.y = 0
@@ -131,10 +140,10 @@ while running:
                 if(mouse_curr == False and mouse_old == True):
                     mouse_old = mouse_curr
                     #agora joga a bola
+                    golf_hit.play()
                     traction = vec(K_FORCE * (mouse_pos - ball.pos).x, K_FORCE * (mouse_pos - ball.pos).y)
                     ball.vel += traction
                     on_sand = False
-                    golf_hit.play()
 
 
             #ball.vel.y = 0
@@ -163,15 +172,14 @@ while running:
     ball_group.draw(screen)
 
     # DESENHANDO A BANDEIRA
-    screen.blit(flag, (terrain.X[-3], terrain.Y[-3] - 20))
-    screen.blit(score_font.render(str(score), True, WHITE), (terrain.X[-3] + 5, terrain.Y[-3] - 18))
+    screen.blit(flag, (terrain.X[-3] - 2, terrain.Y[-3] - 20))
+    screen.blit(score_font.render(str(score), True, WHITE), (terrain.X[-3] + 3, terrain.Y[-3] - 18))
 
 
     mouse_old = mouse_curr
 
     ball_group.update(on_sand)
     pygame.display.update()
-
 
 
 pygame.quit()
