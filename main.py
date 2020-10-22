@@ -68,6 +68,7 @@ while running:
                 on_hole = 0
                 score += 1
 
+
     if mode == EARTH_MODE:
         screen.fill(BROWN_SKY)
     elif mode == MARS_MODE:
@@ -130,7 +131,10 @@ while running:
                 ball.vel.y = 0
                 #jogar a bola novamente
                 mouse_pos = pygame.mouse.get_pos()
-                dot_pos = (mouse_pos - ball.pos)/5
+                try:
+                    dot_pos = (mouse_pos - ball.pos)/5
+                except:
+                    continue
                 #desenhando a força
                 for i in range(1, 6):
                     pygame.draw.circle(screen, WHITE, (math.floor(i*dot_pos.x + ball.pos.x), math.floor(i*dot_pos.y + ball.pos.y)), i*2, 1)
