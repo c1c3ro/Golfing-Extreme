@@ -1,17 +1,18 @@
 import pygame
+import math
 from sprites import *
 from constants import *
 from os import path
 from terrain_generator import *
 from menu import *
-import math
-import constants
+from collision import *
 
 vec = pygame.math.Vector2
+v = Vector
 
 pygame.init()
 
-mode = EARTH_MODE
+mode = "EARTH_MODE"
 
 ball_grav = BALL_GRAV
 
@@ -29,18 +30,21 @@ background_song = pygame.mixer.Sound('sky_loop.wav')
 golf_hit = pygame.mixer.Sound('golf_ball.wav')
 
 # TERRENO
-terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
-terrain_group = pygame.sprite.Group()
-terrain_group.add(terrain)
+terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320))
+points_v = []
+for p in range(len(terrain.points)):
+    if not(p == len(terrain.points) - 1):
+        points_v.append(v(terrain.points[p][0], terrain.points[p][1]))
+terrain_poly = Concave_Poly(v(0, 0), points_v)
 
 # BOLA
 ball = Ball(mode, terrain.X[1] + 10)
 ball_group = pygame.sprite.Group()
 ball_group.add(ball)
+ball_circle = Circle(v(ball.rect.centerx, ball.rect.centery), 8)
 
 menu = Menu()
 
-running = True
 on_sand = False
 on_hole = 0
 
@@ -52,7 +56,7 @@ clock = pygame.time.Clock()
 running = menu.initial_menu(screen)
 
 background_song.play(-1)
-background_song.set_volume(0.4)
+background_song.set_volume(0.2)
 
 while running:
     clock.tick(25)
@@ -62,21 +66,14 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
                 ball.pos = (terrain.X[1] + 10, 200)
-                terrain_group.remove(terrain)
-                terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
-                terrain_group.add(terrain)
+                terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320))
                 on_hole = 0
                 score += 1
 
+    screen.fill(MODES[mode][1])
 
-    if mode == EARTH_MODE:
-        screen.fill(BROWN_SKY)
-    elif mode == MARS_MODE:
-        screen.fill(SKY_MARS)
-    elif mode == MOON_MODE:
-        screen.fill(SKY_MOON)
-
-    if pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
+    if collide(ball_circle, terrain_poly):
+        on_sand = True
         div_index = terrain.getDiv(ball.rect.x)
         #Pegando um "vetor" que vou usar para calcular o
         #angulo entre a bola e o chão para usar no quique
@@ -121,11 +118,11 @@ while running:
         if vel_mag < 1.5:
             ball.vel.x = 0
             ball.vel.x = 0'''
-        while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
-            on_sand = True
-            ball.rect.y -= 0.5
-            #verificando se a velocidade da bola está pequena demais:
-            #print(ball.vel, ball.vel.magnitude())
+        while collide(ball_circle, terrain_poly):
+            ball.rect.y -= 2
+            ball_circle.pos.y -= 2
+            # verificando se a velocidade da bola está pequena demais:
+            # print(ball.vel, ball.vel.magnitude())
             if ball.vel.magnitude() <= 1.5:
                 ball.vel.x = 0
                 ball.vel.y = 0
@@ -161,19 +158,17 @@ while running:
 
     if on_hole > 100:
         ball.pos = (terrain.X[1] + 10, 200)
-        terrain_group.remove(terrain)
-        terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
-        terrain_group.add(terrain)
+        terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320))
         on_hole = 0
         score += 1
 
-    terrain_group.draw(screen)
     
     if menu.firt:
         menu.firt = False
         running = menu.help(screen)
     
     ball_group.draw(screen)
+    pygame.draw.polygon(screen, MODES[mode][2], terrain.points)
 
     # DESENHANDO A BANDEIRA
     screen.blit(flag, (terrain.X[-3] - 2, terrain.Y[-3] - 20))
@@ -183,6 +178,9 @@ while running:
     mouse_old = mouse_curr
 
     ball_group.update(on_sand)
+    ball_circle.pos = v(ball.rect.centerx, ball.rect.centery)
+    print(ball_circle.pos)
+
     pygame.display.update()
 
 

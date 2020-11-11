@@ -11,8 +11,9 @@ import pygame
 import random
 import math
 from constants import *
+from collision import *
 
-class TerrainGenerator(pygame.sprite.Sprite):
+class TerrainGenerator():
     #Terrain generator é uma classe que irá
     #gerar os terrenos do desert golfing de forma
     #procedural, utilizando a biblioteca random.
@@ -20,8 +21,7 @@ class TerrainGenerator(pygame.sprite.Sprite):
     #especificadas pelo usuário e pegar pares aleatórios
     #de pontos (x, y) em cada uma das subdivisões
     #para gerar o terreno.
-    def __init__(self, app_width, app_height, x_div, y_min_max, mode):
-        super().__init__()
+    def __init__(self, app_width, app_height, x_div, y_min_max):
         #recebendo os inteiros largura e a altura da tela do
         #jogo para que possa ser calculado as sub-divisões
         #para o terreno.
@@ -30,20 +30,6 @@ class TerrainGenerator(pygame.sprite.Sprite):
         self.x_div = x_div
         self.y_min_max = y_min_max
         self.points = [(0, self.app_height)] + self.generate() + [(self.app_width, self.app_height), (0, self.app_height)]
-        self.image = pygame.Surface([self.app_width, self.app_height])
-        self.image.fill(WHITE)
-        self.image.set_colorkey(WHITE)
-        if mode == EARTH_MODE:
-            pygame.draw.polygon(self.image, BROWN_SAND, self.points)
-        elif mode == MARS_MODE:
-            pygame.draw.polygon(self.image, RED_MARS, self.points)
-        elif mode == MOON_MODE:
-            pygame.draw.polygon(self.image, MOON_GREY, self.points)
-        self.image = self.image.convert_alpha()
-        self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
-        #self.X = []
-        #self.Y = []
 
     def generate(self):
         #A função generate vai receber um inteiro x_div
