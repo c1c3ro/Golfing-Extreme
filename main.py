@@ -11,7 +11,7 @@ vec = pygame.math.Vector2
 
 pygame.init()
 
-mode = EARTH_MODE
+mode = 0
 
 ball_grav = BALL_GRAV
 
@@ -40,7 +40,6 @@ ball_group.add(ball)
 
 menu = Menu()
 
-running = True
 on_sand = False
 on_hole = 0
 
@@ -61,12 +60,16 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
+                score += 1
+                if score == 11:
+                    mode += 1
+                    score = 1
                 ball.pos = (terrain.X[1] + 10, 200)
                 terrain_group.remove(terrain)
                 terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
                 terrain_group.add(terrain)
                 on_hole = 0
-                score += 1
+
 
 
     if mode == EARTH_MODE:
@@ -160,12 +163,19 @@ while running:
         ball.acc = vec(0, 0)
 
     if on_hole > 100:
+        score += 1
+        if score == 11:
+            mode += 1
+            score = 1
         ball.pos = (terrain.X[1] + 10, 200)
         terrain_group.remove(terrain)
         terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
         terrain_group.add(terrain)
         on_hole = 0
-        score += 1
+
+    if score == 11:
+        mode += 1
+        score = 1
 
     terrain_group.draw(screen)
     
