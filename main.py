@@ -6,6 +6,7 @@ from terrain_generator import *
 from menu import *
 import math
 import constants
+from physics_util import *
 
 vec = pygame.math.Vector2
 
@@ -80,80 +81,31 @@ while running:
         screen.fill(SKY_MOON)
 
     if pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
-        div_index = terrain.getDiv(ball.rect.x)
-        #Pegando um "vetor" que vou usar para calcular o
-        #angulo entre a bola e o chão para usar no quique
-        div_vec_1 = vec(terrain.X[div_index], terrain.Y[div_index])
-        div_vec_2 = vec(terrain.X[div_index + 1], terrain.Y[div_index + 1])
-        div_vec = div_vec_1 - div_vec_2
-        #printando esse vetor para propósitos de: eu quero ver se tá tudo funcionando direito
-        #print(div_vec)
-        #agora eu vou pegar o vetor normal à reta que passa por div_vec_1 e div_vec_2
-        normal_vec = vec(-(div_vec_2.y - div_vec_1.y), (div_vec_2.x - div_vec_1.x))
-        #print(normal_vec)
-        #vou pegar o os ângulos para usar na física do plano inclinado
-        angle = math.atan((div_vec_2.y - div_vec_1.y)/(div_vec_2.x - div_vec_1.x))
-        angle_sin = math.sin(math.radians(angle + 180))
-        angle_cos = math.cos(math.radians(angle + 180))
-        #print(math.degrees(angle))
-        #print("Angulo: {}\nSeno: {}\nCoseno: {}".format(angle, math.sin(math.radians(angle)), math.cos(math.radians(angle))))
-        #agora eu vou inverter o vetor de velocidade da bola com relação à normal do plano
-        #esse vetor vai ser o quique da bola
-        bounce_vec = ball.vel.reflect(normal_vec)
-        #print(bounce_vec)
-        #adicionando isso à velocidade da bola
-        ball.vel = vec(0, 0)
-        ball.vel += bounce_vec
-        #aqui é onde acontece a física do plano inclinado:
-        #plano_inclinado = CONSTANTE_PLANO * ball_grav * angle_sin
-        #if ball.vel.x - plano_inclinado >= COEFICIENTE_ATRITO_ESTATICO:
-        #    ball.vel.x -= plano_inclinado
+        #quique da bola
+        bounce(ball, terrain)
+
         if terrain.onHole(ball.rect.x, ball.rect.y):
             # aqui é o evento para quando a bola entra no buraco
             print('Yay! Dentro do buraco!')
             on_hole += 1
 
-        '''else:
-            #apenas para propositos de debug
-            x_div = terrain.getDiv(ball.rect.x)
-            print('X_div: {}, Y[div]: {}, Y[div + 1]: {}'.format(x_div, terrain.Y[x_div-1], terrain.Y[x_div]))'''
-
-        
-        '''vel_mag = ball.vel.magnitude()
-        print(vel_mag)
-        if vel_mag < 1.5:
-            ball.vel.x = 0
-            ball.vel.x = 0'''
         while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
             on_sand = True
             ball.rect.y -= 0.5
-            #verificando se a velocidade da bola está pequena demais:
-            #print(ball.vel, ball.vel.magnitude())
-            if ball.vel.magnitude() <= 1.5:
-                ball.vel.x = 0
-                ball.vel.y = 0
-                #jogar a bola novamente
-                mouse_pos = pygame.mouse.get_pos()
-                try:
-                    dot_pos = (mouse_pos - ball.pos)/5
-                except:
-                    continue
-                #desenhando a força
-                for i in range(1, 6):
-                    pygame.draw.circle(screen, WHITE, (math.floor(i*dot_pos.x + ball.pos.x), math.floor(i*dot_pos.y + ball.pos.y)), i*2, 1)
+            
+            #Desenhando o indicador de força da tacada
+            mouse_pos = shotIndicator(ball, screen)
 
-                mouse_curr = pygame.mouse.get_pressed()[0]
+            #tacada do golfe
+            mouse_curr = pygame.mouse.get_pressed()[0]
 
-                if(mouse_curr == False and mouse_old == True):
-                    mouse_old = mouse_curr
-                    #agora joga a bola
-                    golf_hit.play()
-                    traction = vec(K_FORCE * (mouse_pos - ball.pos).x, K_FORCE * (mouse_pos - ball.pos).y)
-                    ball.vel += traction
-                    on_sand = False
-
-
-            #ball.vel.y = 0
+            if(mouse_curr == False and mouse_old == True):
+                mouse_old = mouse_curr
+                #agora joga a bola
+                golf_hit.play()
+                traction = vec(K_FORCE * (mouse_pos - ball.pos).x, K_FORCE * (mouse_pos - ball.pos).y)
+                ball.vel += traction
+                on_sand = False
     else:
         on_sand = False
 

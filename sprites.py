@@ -47,7 +47,7 @@ class Ball(pygame.sprite.Sprite):
             #self.acc.x = BALL_ACC
             pass
         if keys[pygame.K_SPACE]:
-            self.vel.y -= 20
+            self.vel.y -= 4
 
         # apply friction
         self.acc.x += self.vel.x * BALL_FRICTION
