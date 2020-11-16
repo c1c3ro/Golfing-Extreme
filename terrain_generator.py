@@ -11,6 +11,7 @@ import pygame
 import random
 import math
 from constants import *
+from terrain_util import *
 
 class TerrainGenerator(pygame.sprite.Sprite):
     #Terrain generator é uma classe que irá
@@ -52,80 +53,22 @@ class TerrainGenerator(pygame.sprite.Sprite):
         #sua primeira posição é um y_min e sua segunda
         #posição é um y_max. y_min_max = (y_min, y_max)
 
-        #O terreno vai iniciar em x = 0
-        #por isso a lista de pontos x é iniciada
-        #contendo um 0
-        X = [0]
-
         #Definindo um tamanho relativo de
         #cada subdivisão
-        divs_size = self.app_width/self.x_div
+        divs_size = getDivSizes(self.app_width, self.x_div)
 
-        for div in range(self.x_div):
-            #Definindo o ponto inicial e final de
-            #cada subdivisão no X
-            div_start = X[div]
-            div_end = (div + 1) * divs_size
+        #Dividindo X e Y e gerando os pontos do terreno
+        X = XDiv(self.app_width, self.x_div, divs_size)
 
-            #Pegando um ponto x aleatório entre o início
-            #e o fim da subdivisão
-            x = random.uniform(div_start, div_end)
+        Y = YDiv(X, self.y_min_max)
 
-            #Por fim, eu adiciono esse ponto a lista de
-            #pontos X
-            X.append(x)
-
-            #print(x)
-
-        #Por fim, o último ponto deve ser o tamanho
-        #da tela, app_width
-        X.append(self.app_width)
-
-
-        #No Y vai funcionar de uma forma parecida:
-        #eu vou gerar um número aleatório em o y_min
-        #e o y_max para fazer par com cada um dos pontos X
-        #e armazená-los em uma lista
-        Y = []
-
-        for x in range(len(X)):
-            if x != 2:
-                y = random.uniform(self.y_min_max[0], self.y_min_max[1])
-                Y.append(y)
-            # FAZENDO A SEGUNDA E TERCEIRA COORD Y IGUAIS PARA O TERRENO FICAR PLANO PARA A BOLA
-            else:
-                Y.append(Y[1])
-
-
-        #AQUI É ONDE EU CRIO O BURACO DA BOLA
-        x_hole = X[len(X) - HOLE_DIV - 1]
-        y_hole = Y[len(Y) - HOLE_DIV - 1]
-
-        y_hole -= 15
-
-        X.insert(len(X) - HOLE_DIV - 1, x_hole)
-        Y.insert(len(Y) - HOLE_DIV - 1, y_hole)
-
-        x_hole += 15
-
-        X.insert(len(X) - HOLE_DIV, x_hole)
-        Y.insert(len(Y) - HOLE_DIV, y_hole + 15) 
-
-        X.insert(len(X) - HOLE_DIV, x_hole)
-        Y.insert(len(Y) - HOLE_DIV, y_hole) 
-
-        X[len(X) - HOLE_DIV] += 20
+        #Fazendo buraco
+        X, Y = mkHole(X, Y)
 
         self.X = X
         self.Y = Y
 
-        '''
-        for x in range(len(X)):
-            print(X[x], end='   ')
-            print(Y[x])
-        '''
-
-        return [(math.floor(X[i]), math.floor(Y[i])) for i in range(len(X))]
+        return normalizeTerrain(X, Y)
 
     def getDiv(self, x):
         #retorna a divisão a que a coordenada x pertence
@@ -160,27 +103,3 @@ class TerrainGenerator(pygame.sprite.Sprite):
             return True
         else:
             return False
-        
-            
-'''
-if __name__ == "__main__" :
-    size = window_width, window_height = 800, 400
-
-    terrain = TerrainGenerator(window_width, window_height, 8, (200, 320))
-    terrain_group = pygame.sprite.Group()
-    terrain_group.add(terrain)
-
-    pygame.init()
-    display = pygame.display.set_mode(size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-    running = True
-
-    while(running):
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        terrain_group.draw(display)
-
-        pygame.display.update()
-'''
