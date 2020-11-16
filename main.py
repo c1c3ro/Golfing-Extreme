@@ -47,12 +47,31 @@ on_hole = 0
 mouse_old = False
 mouse_curr = False
 
+old_vel = vec(0, 0)
+new_vel = vec(0, 0)
+
 clock = pygame.time.Clock()
 
 running = menu.initial_menu(screen)
 
 background_song.play(-1)
 background_song.set_volume(0.4)
+
+def newTerrain():
+    global score, mode, terrain, terrain_group, on_hole, running
+    score += 1
+    if score == 11:
+        mode += 1
+        score = 1
+        if mode == 3:
+            print("PARABÉNS!!! VOCÊ GANHOU O JOGO!")
+            running = False
+    ball.pos = (terrain.X[1] + 10, 200)
+    terrain_group.remove(terrain)
+    terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
+    terrain_group.add(terrain)
+    on_hole = 0
+
 
 while running:
     clock.tick(25)
@@ -61,17 +80,7 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
-                score += 1
-                if score == 11:
-                    mode += 1
-                    score = 1
-                ball.pos = (terrain.X[1] + 10, 200)
-                terrain_group.remove(terrain)
-                terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
-                terrain_group.add(terrain)
-                on_hole = 0
-
-
+                newTerrain()
 
     if mode == EARTH_MODE:
         screen.fill(BROWN_SKY)
@@ -92,7 +101,9 @@ while running:
         while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
             on_sand = True
             ball.rect.y -= 0.5
-            
+            new_vel = ball.vel
+            if vec(0, abs(new_vel.y) - abs(old_vel.y)).magnitude() < 0.001:
+                ball.vel = vec(0, 0)
             #Desenhando o indicador de força da tacada
             mouse_pos = shotIndicator(ball, screen)
 
@@ -102,10 +113,13 @@ while running:
             if(mouse_curr == False and mouse_old == True):
                 mouse_old = mouse_curr
                 #agora joga a bola
-                golf_hit.play()
-                traction = vec(K_FORCE * (mouse_pos - ball.pos).x, K_FORCE * (mouse_pos - ball.pos).y)
+                try:
+                    traction = vec(K_FORCE * (mouse_pos - ball.pos).x, K_FORCE * (mouse_pos - ball.pos).y)
+                except TypeError:
+                    continue
                 ball.vel += traction
                 on_sand = False
+                golf_hit.play()
     else:
         on_sand = False
 
@@ -115,19 +129,7 @@ while running:
         ball.acc = vec(0, 0)
 
     if on_hole > 100:
-        score += 1
-        if score == 11:
-            mode += 1
-            score = 1
-        ball.pos = (terrain.X[1] + 10, 200)
-        terrain_group.remove(terrain)
-        terrain = TerrainGenerator(WIDTH, HEIGHT, 8, (200, 320), mode)
-        terrain_group.add(terrain)
-        on_hole = 0
-
-    if score == 11:
-        mode += 1
-        score = 1
+        newTerrain()
 
     terrain_group.draw(screen)
     
@@ -141,11 +143,10 @@ while running:
     screen.blit(flag, (terrain.X[-3] - 2, terrain.Y[-3] - 20))
     screen.blit(score_font.render(str(score), True, WHITE), (terrain.X[-3] + 3, terrain.Y[-3] - 18))
 
-
     mouse_old = mouse_curr
+    old_vel = ball.vel
 
     ball_group.update(on_sand)
     pygame.display.update()
-
 
 pygame.quit()

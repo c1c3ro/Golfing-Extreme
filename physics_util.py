@@ -23,7 +23,7 @@ def bounce(ball, terrain):
     ball.vel += bounce_vec
 
 def shotIndicator(ball, screen):
-    if ball.vel.magnitude() <= 1.5:
+    if ball.vel.magnitude() <= 3.5:
         ball.vel.x = 0
         ball.vel.y = 0
         #jogar a bola novamente
@@ -31,7 +31,7 @@ def shotIndicator(ball, screen):
         try:
             dot_pos = (mouse_pos - ball.pos)/5
         except:
-            pass
+            return
         #desenhando a força
         for i in range(1, 6):
             pygame.draw.circle(screen, WHITE, (math.floor(i*dot_pos.x + ball.pos.x), math.floor(i*dot_pos.y + ball.pos.y)), i*2, 1)
