@@ -1,12 +1,12 @@
-import pygame
-from sprites import *
+from ball import Ball
 from constants import *
 from os import path
 from terrain_generator import *
+from physics_util import *
 from menu import *
+import pygame
 import math
 import constants
-from physics_util import *
 
 vec = pygame.math.Vector2
 
@@ -57,6 +57,7 @@ running = menu.initial_menu(screen)
 background_song.play(-1)
 background_song.set_volume(0.4)
 
+
 def newTerrain():
     global score, mode, terrain, terrain_group, on_hole, running
     score += 1
@@ -102,7 +103,7 @@ while running:
             on_sand = True
             ball.rect.y -= 0.5
             new_vel = ball.vel
-            if vec(0, abs(new_vel.y) - abs(old_vel.y)).magnitude() < 0.001:
+            if abs(abs(new_vel.y) - abs(old_vel.y)) < 0.001:
                 ball.vel = vec(0, 0)
             #Desenhando o indicador de força da tacada
             mouse_pos = shotIndicator(ball, screen)
