@@ -41,7 +41,6 @@ ball_group.add(ball)
 
 menu = Menu()
 
-on_sand = False
 on_hole = 0
 
 mouse_old = False
@@ -100,7 +99,7 @@ while running:
             on_hole += 1
 
         while pygame.sprite.groupcollide(ball_group, terrain_group, False, False, pygame.sprite.collide_mask):
-            on_sand = True
+            ball.on_sand = True
             ball.rect.y -= 0.5
             new_vel = ball.vel
             if abs(abs(new_vel.y) - abs(old_vel.y)) < 0.001:
@@ -119,10 +118,10 @@ while running:
                 except TypeError:
                     continue
                 ball.vel += traction
-                on_sand = False
+                ball.on_sand = False
                 golf_hit.play()
     else:
-        on_sand = False
+        ball.on_sand = False
 
     if ball.rect.x < 0 or ball.rect.x > WIDTH:
         ball.pos = (terrain.X[1] + 10, 200)
@@ -147,7 +146,7 @@ while running:
     mouse_old = mouse_curr
     old_vel = ball.vel
 
-    ball_group.update(on_sand)
+    ball_group.update()
     pygame.display.update()
 
 pygame.quit()

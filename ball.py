@@ -2,6 +2,7 @@ import pygame
 import random
 import math
 from constants import *
+from physics_util import updateBall
 from os import path
 
 vec = pygame.math.Vector2
@@ -18,6 +19,7 @@ class Ball(pygame.sprite.Sprite):
         self.pos = vec(initial_x, 200)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
+        self.on_sand = False
         if mode == EARTH_MODE:
             self.ball_grav = EARTH_GRAV
         elif mode == MARS_MODE:
@@ -25,20 +27,5 @@ class Ball(pygame.sprite.Sprite):
         elif mode == MOON_MODE:
             self.ball_grav = MOON_GRAV
 
-    def update(self, on_sand):
-        self.acc = vec(0, self.ball_grav)
-        if on_sand:
-            self.acc = vec(0, 0)
-        else:
-            if self.vel.y < -5:
-                self.vel.y = -5
-
-        # apply friction
-        self.acc.x += self.vel.x * BALL_FRICTION
-        # equations of motion
-        self.vel += self.acc
-        if abs(self.vel.x) < 0.1 and abs(self.vel.y) < 0.1:
-            self.vel = vec(0, 0)
-        self.pos += self.vel + 0.5 * self.acc
-        self.rect.midbottom = self.pos
-
+    def update(self):
+        self.rect.midbottom = updateBall(self)
