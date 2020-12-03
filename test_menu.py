@@ -4,7 +4,7 @@ from constants import *
 
 pygame.init()
 
-# BLACK BOX
+# WHITE BOX
 
 def test_animationclose():
     menu = Menu()
