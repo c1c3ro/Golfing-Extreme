@@ -4,9 +4,11 @@ from constants import *
 
 pygame.init()
 
+#As funçoes testadas recebem os inputs atraves da interface#
+
 # WHITE BOX
 
-def test_animationclose():
+def test_animationclose():#fechar janela
     menu = Menu()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     expect= menu.animation(screen)
@@ -20,13 +22,13 @@ def test_animation():
 
 # BLACK BOX
 
-def test_initial_menustart():
+def test_initial_menustart():#clicar no botão start
     menu = Menu()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     expect = menu.initial_menu(screen)
     assert expect == True
 
-def test_initial_menuexit():
+def test_initial_menuexit():#clicar no botão exit
     menu = Menu()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     expect = menu.initial_menu(screen)
